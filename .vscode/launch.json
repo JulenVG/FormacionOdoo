@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Python File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:\\Users\\julen\\Desktop\\TiOdoo\\Odoo\\odoo18\\odoo-bin", //Aqui pones la ruta de odoo-bin
+            "args": [
+                "--config=C:\\Users\\julen\\Desktop\\TiOdoo\\Odoo\\odoo18\\odoo18.conf", //Aquí pones la ruta de tu archivo conf
+            ],
+            "console": "integratedTerminal",
+        }
+    ]
+}
