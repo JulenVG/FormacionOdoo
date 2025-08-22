@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- 1. Acción que abre la vista -->
+    <record id="action_productos" model="ir.actions.act_window">
+        <field name="name">Productos</field>
+        <field name="res_model">mi.producto</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <!-- 2. Menú -->
+    <menuitem id="menu_mi_modulo_root"
+              name="Mi Módulo"
+              sequence="10"/>
+    <menuitem id="menu_mi_modulo_productos"
+              name="Productos"
+              parent="menu_mi_modulo_root"
+              action="action_productos"
+              sequence="20"/>
+
+    <!-- 3. Vista árbol -->
+    <record id="view_producto_list" model="ir.ui.view">
+        <field name="name">mi.producto.list</field>
+        <field name="model">mi.producto</field>
+        <field name="arch" type="xml">
+            <tree string="Productos">
+                <field name="nombre"/>
+                <field name="precio_unitario"/>
+                <field name="cantidad"/>
+                <field name="subtotal"/>
+                <field name="iva"/>
+                <field name="total"/>
+                <field name="activo"/>
+                <field name="tipo"/>
+                <field name="categoria_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 4. Vista formulario -->
+    <record id="view_producto_form" model="ir.ui.view">
+        <field name="name">mi.producto.form</field>
+        <field name="model">mi.producto</field>
+        <field name="arch" type="xml">
+            <form string="Producto">
+                <sheet>
+                    <group>
+                        <field name="nombre"/>
+                        <field name="descripcion"/>
+                        <field name="categoria_id"/>
+                        <field name="tipo"/>
+                    </group>
+
+                    <notebook>
+                        <!-- Pestaña de precios -->
+                        <page string="Precios">
+                            <group>
+                                <field name="precio_unitario"/>
+                                <field name="cantidad"/>
+                                <field name="subtotal" readonly="1"/>
+                                <field name="iva"/>
+                                <field name="total" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Pestaña de estado -->
+                        <page string="Estado">
+                            <group>
+                                <field name="activo"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- Botones de acción -->
+                <footer>
+                    <button name="action_marcar_inactivo"
+                            string="Marcar Inactivo"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="duplicar_producto"
+                            string="Duplicar"
+                            type="object"
+                            class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- 5. Vista kanban -->
+    <record id="view_producto_kanban" model="ir.ui.view">
+        <field name="name">mi.producto.kanban</field>
+        <field name="model">mi.producto</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_example" default_group_by="tipo">
+                <field name="nombre"/>
+                <field name="precio_unitario"/>
+                <field name="total"/>
+                <field name="activo"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_primary">
+                                <field name="nombre"/>
+                            </div>
+                            <div class="o_kanban_secondary">
+                                <strong>Precio:</strong>
+                                <field name="precio_unitario"/>
+                                <br/>
+                                <strong>Total:</strong>
+                                <field name="total"/>
+                            </div>
+                            <div>
+                                <span t-if="record.activo.raw_value">🟢 Activo</span>
+                                <span t-else>🔴 Inactivo</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- 6. Vista búsqueda -->
+    <record id="view_producto_search" model="ir.ui.view">
+        <field name="name">mi.producto.search</field>
+        <field name="model">mi.producto</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Productos">
+                <field name="nombre"/>
+                <field name="categoria_id"/>
+                <filter name="filtro_activos"
+                        string="Activos"
+                        domain="[('activo','=',True)]"/>
+                <filter name="filtro_tipo_fisico"
+                        string="Físicos"
+                        domain="[('tipo','=','fisico')]"/>
+                <group expand="0" string="Agrupar por...">
+                    <filter name="group_categoria"
+                            string="Categoría"
+                            context="{'group_by':'categoria_id'}"/>
+                    <filter name="group_tipo"
+                            string="Tipo"
+                            context="{'group_by':'tipo'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>
